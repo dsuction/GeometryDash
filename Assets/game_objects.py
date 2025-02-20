@@ -1,7 +1,5 @@
-from itertools import count
-
 import pygame as pg
-from tools import  load_image
+from tools.tools import  load_image
 from abc import ABC, abstractmethod
 
 

@@ -17,6 +17,8 @@ def main():
             scene = LevelsMenuScene(size)
         elif scene.event == 'return_to_menu':
             scene = MenuScene(size)
+        elif scene.event == 'open_exit_menu':
+            print(1)
         screen.blit(scene.scene, (0, 0))
         clock.tick(FPS)
         pg.display.flip()

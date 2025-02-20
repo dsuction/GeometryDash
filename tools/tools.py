@@ -4,7 +4,7 @@ import pygame as pg
 
 
 def load_image(path: str, color_key=None) -> pg.Surface:
-    fullname = os.path.join('Assets', path)
+    fullname = os.path.join('assets', path)
     if not os.path.isfile(fullname):
         sys.exit()
     image = pg.image.load(fullname)
@@ -25,6 +25,6 @@ def load_music(path: str):
     return pg.mixer.music.load(fullname)
 
 
-def paste_image(scene: pg.Surface, path_image: str, size_image: tuple[int, int], pos: tuple[int, int]) -> None:
-    image = pg.transform.scale(load_image(path_image), size_image)
-    scene.blit(image, pos)
+def paste_image(scene: pg.Surface, path_image: str, size_image: tuple[int, int], pos: tuple[int, int], color_key=None) -> None:
+    image = pg.transform.scale(load_image(path_image, color_key=color_key), size_image)
+    scene.blit(image, (pos[0] - size_image[0] // 2, pos[1] - size_image[1] // 2))

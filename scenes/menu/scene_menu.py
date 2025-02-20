@@ -1,6 +1,6 @@
 import sys
 import pygame as pg
-from tools import load_music, paste_image
+from tools.tools import load_music, paste_image
 from scenes.scene import Scene
 from assets.game_objects import Button, Background, Platforms, GameObject
 
@@ -15,7 +15,12 @@ class MenuScene(Scene):
         self._all_sprite = pg.sprite.Group()
         self._background = Background(window_size, 'menu/icons/background.png')
         self._platforms = Platforms(window_size)
-        self._start_button = Button(self._all_sprite, 'menu/icons/start_button.png', (window_size[1] // 3, window_size[1] // 3), window_size, (window_size[0] // 2, window_size[1] // 2), 'open_levels_menu')
+        self._start_button = Button(self._all_sprite, 'menu/icons/start_button.png',
+                                    (window_size[1] // 3, window_size[1] // 3), window_size,
+                                    (window_size[0] // 2, window_size[1] // 2 - 20), 'open_levels_menu')
+        self._exit_button = Button(self._all_sprite, 'menu/icons/exit_button.png',
+                                   (window_size[1] // 15, window_size[1] // 15), window_size,
+                                   (40, 40), 'open_exit_menu')
         load_music('menu\sounds\menuLoop.mp3')
         pg.mixer.music.play(-1)
         self._event = ''
@@ -25,7 +30,9 @@ class MenuScene(Scene):
         self._objects.append(self._background)
         self._objects.append(self._platforms)
         self._objects.append(self._start_button)
+        self._objects.append(self._exit_button)
         self._buttons.append(self._start_button)
+        self._buttons.append(self._exit_button)
 
     def update(self) -> None:
         self._handle_event()
@@ -35,7 +42,7 @@ class MenuScene(Scene):
         self._scene.fill(self.set_color(MenuScene.color_background))
         self._scene.blit(self._background, (0, 0))
         self._scene.blit(self._platforms, (0, self._window_size[1] - self._window_size[1] // 3))
-        paste_image(self._scene, 'menu/icons/geometry_dash.png', (800, 800 // 6), (0, 0))
+        paste_image(self._scene, 'menu/icons/gd.jpg', (704, 545), (self._window_size[0] // 2, self._window_size[1] // 5), color_key=-1)
         self._all_sprite.draw(self._scene)
 
     def _handle_event(self) -> None:
