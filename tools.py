@@ -19,7 +19,7 @@ def load_image(path: str, color_key=None) -> pg.Surface:
 
 
 def load_music(path: str):
-    fullname = os.path.join('Assets', path)
+    fullname = os.path.join('assets', path)
     if not os.path.isfile(fullname):
         sys.exit()
     return pg.mixer.music.load(fullname)

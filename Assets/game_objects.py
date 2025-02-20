@@ -1,3 +1,5 @@
+from itertools import count
+
 import pygame as pg
 from tools import  load_image
 from abc import ABC, abstractmethod
@@ -76,39 +78,46 @@ class Background(pg.Surface, GameObject):
 
 
 class Platform(pg.sprite.Sprite, GameObject):
-    def __init__(self, image_path: str, window_size: tuple[int, int], speed: int=15, *grop):
-        super().__init__(*grop)
-        self.image = load_image(image_path)
+    count_platform = 0
+    def __init__(self, image_path: str, window_size: tuple[int, int], speed: int,  *group):
+        super().__init__(*group)
+        self._speed = speed
+        self._side_size = window_size[1] // 3
+        self._window_size = window_size
+        self.image = pg.transform.scale(load_image(image_path), (self._side_size, self._side_size))
         self.rect = self.image.get_rect()
-        self.rect.x = 0
+        self.rect.x = self._side_size * Platform.count_platform
         self.rect.y = 0
-        # self._image = load_image(image_path)
-        # self._side_size = self._image.get_size()[0]
-        # self._quantity = window_size[0] // self._side_size + 2
-        # super().__init__((window_size[0], self._side_size))
-        # self._speed = speed
-        # self.y = 0
-        # self.all_x = [self._side_size * i for i in range(self._quantity)]
-        # for x in self.all_x:
-        #     self.blit(self._image, (x, 0))
-        # transparency = 55
-        # self.set_alpha(transparency)
+        Platform.count_platform += 1
 
     def update(self):
-        pass
-        # self.fill('black')
-        # for i in range(self._quantity):
-        #     self.all_x[i] -= self._speed
-        #     if self.all_x[i] < -self._side_size:
-        #         self.all_x.pop(0)
-        #         self.all_x.append(self.all_x[-1] + self._side_size)
-        # for x in self.all_x:
-        #     self.blit(self._image, (x, self.y))
+        if self.rect.x + self.rect.w <= 0:
+            self.rect.x = self._side_size * (Platform.count_platform - 1)
+        self.rect.x -= self._speed
 
     @property
     def side_size(self):
         return self._side_size
 
 
-class Platforms(GameObject):
-    pass
+class Platforms(pg.Surface, GameObject):
+    def __init__(self, window_size: tuple[int, int]):
+        self._size  = (window_size[0], window_size[1] // 3)
+        super().__init__(self._size)
+        Platform.count_platform = 0
+        self.set_colorkey('black')
+        transparency = 110
+        self.set_alpha(transparency)
+        self._platforms_group = pg.sprite.Group()
+        self._quantity = window_size[0] // (window_size[1] // 3) + 2
+        self._platforms = []
+        for i in range(self._quantity):
+            self._platforms.append(Platform('menu/icons/platform.png', window_size, 15, self._platforms_group))
+
+    def update(self) -> None:
+        self._platforms_group.update()
+        self._platforms_group.draw(self)
+
+    @property
+    def platform_group(self) -> pg.sprite.Group:
+        return self._platforms_group

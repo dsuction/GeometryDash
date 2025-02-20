@@ -2,21 +2,22 @@ import sys
 import pygame as pg
 from tools import load_music, paste_image
 from scenes.scene import Scene
-from Assets.game_objects import Button, Background, Platform, GameObject
+from assets.game_objects import Button, Background, Platforms, GameObject
 
 
 class MenuScene(Scene):
+    color_background = 0
+
     def __init__(self, window_size: tuple[int, int]) -> None:
         super().__init__(window_size)
         self._objects: list[GameObject] = []
         self._buttons: list[Button] =  []
         self._all_sprite = pg.sprite.Group()
         self._background = Background(window_size, 'menu/icons/background.png')
-        self._platforms = Platform('menu/icons/platform.png', window_size)
+        self._platforms = Platforms(window_size)
         self._start_button = Button(self._all_sprite, 'menu/icons/start_button.png', (window_size[1] // 3, window_size[1] // 3), window_size, (window_size[0] // 2, window_size[1] // 2), 'open_levels_menu')
         load_music('menu\sounds\menuLoop.mp3')
         pg.mixer.music.play(-1)
-        self._color = 0
         self._event = ''
         self.init_ui()
 
@@ -30,10 +31,10 @@ class MenuScene(Scene):
         self._handle_event()
         for ob in self._objects:
             ob.update()
-        self._color = (self._color + 1) if self._color <= 1529 else 0
-        self._scene.fill(self.color(self._color))
+        MenuScene.color_background = (MenuScene.color_background + 1) if MenuScene.color_background <= 1529 else 0
+        self._scene.fill(self.set_color(MenuScene.color_background))
         self._scene.blit(self._background, (0, 0))
-        self._scene.blit(self._platforms, (0, self._window_size[1] - self._platforms.side_size))
+        self._scene.blit(self._platforms, (0, self._window_size[1] - self._window_size[1] // 3))
         paste_image(self._scene, 'menu/icons/geometry_dash.png', (800, 800 // 6), (0, 0))
         self._all_sprite.draw(self._scene)
 
@@ -53,7 +54,7 @@ class MenuScene(Scene):
                             self._event = button.signal
 
     @staticmethod
-    def color(color: int) -> pg.color:
+    def set_color(color: int) -> pg.color:
         rgb = [0, 0, 0]
         if color <= 255:
             rgb[0] = 255
