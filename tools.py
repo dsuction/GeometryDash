@@ -23,3 +23,8 @@ def load_music(path: str):
     if not os.path.isfile(fullname):
         sys.exit()
     return pg.mixer.music.load(fullname)
+
+
+def paste_image(scene: pg.Surface, path_image: str, size_image: tuple[int, int], pos: tuple[int, int]) -> None:
+    image = pg.transform.scale(load_image(path_image), size_image)
+    scene.blit(image, pos)
