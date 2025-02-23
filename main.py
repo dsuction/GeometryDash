@@ -1,7 +1,9 @@
 import pygame
 import pygame as pg
+
+from tools.choice_scene import choice_scene
 from scenes.menu.scene_menu import MenuScene
-from scenes.levels_menu.scene_levels_menu import LevelsMenuScene
+from scenes.scene import Scene
 FPS = 60
 
 
@@ -10,17 +12,11 @@ def main():
     screen = pg.display.set_mode(flags=pygame.FULLSCREEN)
     size = screen.get_size()
     clock = pg.time.Clock()
-    scene = MenuScene(screen.get_size())
+    scene: MenuScene = choice_scene['return_to_menu'](size)
     while True:
         scene.update()
-        if scene.event == 'open_levels_menu':
-            scene = LevelsMenuScene(size)
-        elif scene.event == 'return_to_menu':
-            scene = MenuScene(size)
-        elif scene.event == 'open_exit_menu':
-            print(1)
+        scene: Scene  = choice_scene[scene.event](size) if scene.event else scene
         screen.blit(scene.scene, (0, 0))
-        clock.tick(FPS)
         pg.display.flip()
         clock.tick(FPS)
 
