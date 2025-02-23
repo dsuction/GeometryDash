@@ -9,10 +9,10 @@ FPS = 60
 
 def main():
     pg.init()
-    screen = pg.display.set_mode(flags=pygame.FULLSCREEN)
+    screen = pg.display.set_mode(flags=pg.FULLSCREEN)
     size = screen.get_size()
     clock = pg.time.Clock()
-    scene: MenuScene = choice_scene['return_to_menu'](size)
+    scene: Scene = MenuScene(size)
     while True:
         scene.update()
         scene: Scene  = choice_scene[scene.event](size) if scene.event else scene

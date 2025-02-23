@@ -1,15 +1,20 @@
 import sys
 import pygame as pg
 from scenes.scene import Scene
+from tools.tools import load_level, get_names_files_directory
+import json
 
 
 class LevelsMenuScene(Scene):
     def __init__(self, size):
         super().__init__(size)
+        self.init_ui()
+        print(type(load_level('levels/I_Hate_This_Level.json')))
+        print(get_names_files_directory('levels/'))
 
     def init_ui(self):
-        pass
-
+        self._scene.fill('blue')
+    
     def update(self):
         self._handle_event()
 
