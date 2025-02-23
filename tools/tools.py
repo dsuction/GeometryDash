@@ -43,6 +43,8 @@ def load_level(path: str) -> dict:
 
 
 def get_names_files_directory(path: str) -> list[str]:
-    fullname: str = check_file(path)
+    fullname: str = os.path.join('assets', path)
+    if not os.path.isdir(fullname):
+        sys.exit()
     files = os.listdir(fullname)
     return files

@@ -9,8 +9,6 @@ class LevelsMenuScene(Scene):
     def __init__(self, size):
         super().__init__(size)
         self.init_ui()
-        print(type(load_level('levels/I_Hate_This_Level.json')))
-        print(get_names_files_directory('levels/'))
 
     def init_ui(self):
         self._scene.fill('blue')
