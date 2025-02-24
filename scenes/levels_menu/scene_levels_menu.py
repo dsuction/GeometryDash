@@ -41,6 +41,7 @@ class LevelsMenuScene(Scene):
         pass
 
     def update(self):
+        self._scene.fill('black')
         self._button_group.draw(self._scene)
         self._button_group.update()
         self._handle_event()

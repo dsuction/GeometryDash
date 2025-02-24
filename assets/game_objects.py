@@ -10,13 +10,15 @@ class GameObject(ABC):
 
 
 class Button(pg.sprite.Sprite, GameObject):
-    def __init__(self, group: pg.sprite.Group, path_image: str, size: tuple[int, int], size_window: tuple[int, int],  pos: tuple[int, int], signal: str) -> None:
+    def __init__(self, group: pg.sprite.Group, path_image: str, size: tuple[int, int], size_window: tuple[int, int],
+                 pos: tuple[int, int], signal: str) -> None:
         super().__init__(group)
         self._pos = pos
         self._size = size
         self._size_window = size_window
         self._signal = signal
         self._is_pressed = False
+        self._is_lock = False
         increase = 1.2
         self._image_1 = pg.transform.scale(load_image(path_image), size)
         self._image_2 = pg.transform.scale(load_image(path_image), (size[0] * increase, size[1] * increase))
@@ -24,8 +26,11 @@ class Button(pg.sprite.Sprite, GameObject):
         self.rect = self.image.get_rect()
         self.update()
 
+    def set_lock(self, is_lock: bool) -> None:
+        self._is_lock = is_lock
+
     def update(self) -> None:
-        if self.check_mouse_pos(self.rect):
+        if self.check_mouse_pos(self.rect) and not self._is_lock:
             self.image = self._image_2
         else:
             self.image = self._image_1
@@ -51,6 +56,8 @@ class Button(pg.sprite.Sprite, GameObject):
 
     @property
     def signal(self) -> str:
+        if self._is_lock:
+            return ''
         return self._signal
 
 
@@ -110,7 +117,8 @@ class Platforms(pg.Surface, GameObject):
         self._quantity = window_size[0] // (window_size[1] // 3) + 2
         self._platforms = []
         for i in range(self._quantity):
-            self._platforms.append(Platform('menu/icons/platform.png', window_size, 15, self._platforms_group))
+            self._platforms.append(Platform('menu/icons/platform.png', window_size, 15,
+                                            self._platforms_group))
 
     def update(self) -> None:
         self._platforms_group.update()
