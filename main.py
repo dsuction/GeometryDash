@@ -13,6 +13,7 @@ def main():
     window_size = screen.get_size()
     clock = pg.time.Clock()
     scene: Scene = MenuScene(window_size)
+
     while True:
         scene.update()
         scene: Scene = choice_scene[scene.event](window_size) if scene.event else scene
