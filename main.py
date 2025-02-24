@@ -4,7 +4,6 @@ from utils.choice_scene import choice_scene
 from scenes.menu.scene_menu import MenuScene
 from scenes.scene import Scene
 
-
 FPS = 60
 
 
@@ -17,7 +16,7 @@ def main():
 
     while True:
         scene.update()
-        scene: Scene  = choice_scene[scene.event](window_size) if scene.event else scene
+        scene: Scene = choice_scene[scene.event](window_size) if scene.event else scene
         screen.blit(scene.scene, (0, 0))
         pg.display.flip()
         clock.tick(FPS)
