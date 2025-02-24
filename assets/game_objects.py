@@ -1,5 +1,5 @@
 import pygame as pg
-from tools.tools import  load_image
+from utils.utils import  load_image
 from abc import ABC, abstractmethod
 
 

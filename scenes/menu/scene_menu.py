@@ -1,6 +1,6 @@
 import sys
 import pygame as pg
-from tools.tools import load_music, paste_image
+from utils.utils import load_music, paste_image
 from scenes.scene import Scene
 from assets.game_objects import Button, Background, Platforms, GameObject
 
@@ -102,8 +102,11 @@ class MenuScene(Scene):
         self._scene.fill(self.set_color(MenuScene.color_background))
         self._scene.blit(self._background, (0, 0))
         self._scene.blit(self._platforms, (0, self._window_size[1] - self._window_size[1] // 3))
-        paste_image(self._scene, 'menu/icons/geometry_dash.png', (429 * 2.5, 50 * 2.5), (self._window_size[0] // 2, self._window_size[1] // 5))
-        paste_image(self._scene, 'menu/icons/robtop.png', (self._window_size[0] * 3 // 20, self._window_size[1] * 2 // 20), (self._window_size[0] * 4 // 40 , self._window_size[1] * 18 // 20))
+        paste_image(self._scene, 'menu/icons/geometry_dash.png', (429 * 2.5, 50 * 2.5),
+                    (self._window_size[0] // 2, self._window_size[1] // 5))
+        paste_image(self._scene, 'menu/icons/robtop.png',
+                    (self._window_size[0] * 3 // 20, self._window_size[1] * 2 // 20),
+                    (self._window_size[0] * 4 // 40 , self._window_size[1] * 18 // 20))
         self._all_sprite.draw(self._scene)
 
     def _handle_event(self) -> None:
@@ -113,7 +116,7 @@ class MenuScene(Scene):
                 sys.exit()
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
-                    sys.exit()
+                    self._event = 'open_exit_menu'
             elif event.type == pg.MOUSEBUTTONDOWN:
                 lkm = 1
                 if event.button == lkm:
