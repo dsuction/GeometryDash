@@ -80,12 +80,12 @@ class MenuScene(Scene):
                                    (60, 60), 'open_exit_menu')
 
         self._exit_cancel_button = Button(self._exit_sprites, 'menu/icons/exit_cancel_button.png',
-                                          (window_size[0] // 7, window_size[1] // 7), window_size,
-                                          (window_size[0] * 4 // 10, window_size[1] * 6 // 10), 'close_exit_menu')
+                                          (int(window_size[0] / 5), int(window_size[1] / 7.5)), window_size,
+                                           (window_size[0] * 4 // 10 + 40, window_size[1] * 6 // 10 + 12), 'close_exit_menu')
 
         self._exit_yes_button = Button(self._exit_sprites, 'menu/icons/exit_yes_button.png',
-                                       (window_size[0] // 7, window_size[1] // 7), window_size,
-                                       (window_size[0] * 6 // 10, window_size[1] * 6 // 10 + 5), 'exit')
+                                       (int(window_size[0] / 7.5), int(window_size[1] / 7.5)), window_size,
+                                        (window_size[0] * 6 // 10 - 10, window_size[1] * 6 // 10 + 12), 'exit')
 
         load_music('menu\sounds\menuLoop.mp3')
         pg.mixer.music.play(-1)
