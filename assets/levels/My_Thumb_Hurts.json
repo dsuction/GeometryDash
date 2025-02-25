@@ -1,4 +1,5 @@
 {
   "name": "My_Thumb_Hurts",
-  "color_menu": [30, 255, 30]
+  "color_menu": [30, 255, 30],
+  "objects": [["color", [255, 0, 0], [0, 0]],["spike", [100, 0]], ["block", [200, 0]]]
 }

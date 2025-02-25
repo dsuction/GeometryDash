@@ -1,3 +1,5 @@
+from tokenize import group
+
 import pygame as pg
 from utils.utils import  load_image
 from abc import ABC, abstractmethod
@@ -62,9 +64,9 @@ class Button(pg.sprite.Sprite, GameObject):
 
 
 class Background(pg.Surface, GameObject):
-    def __init__(self, windows_size, image) -> None:
+    def __init__(self, windows_size: tuple[int, int], path_image: str) -> None:
         super().__init__((windows_size[0], windows_size[1] - windows_size[1] // 3))
-        self.image = pg.transform.flip(pg.transform.scale(load_image(image), windows_size), True, True)
+        self.image = pg.transform.flip(pg.transform.scale(load_image(path_image), windows_size), True, True)
         self._x1 = 0
         self._x2 = self.image.get_width()
         self._y = 0
@@ -127,3 +129,32 @@ class Platforms(pg.Surface, GameObject):
     @property
     def platform_group(self) -> pg.sprite.Group:
         return self._platforms_group
+
+
+
+class Block(GameObject, pg.sprite.Sprite):
+    path_image = 'menu/icons/youtube_button.png'
+
+    def __init__(self, groups: pg.sprite.Group, pos: tuple[int, int], speed: int) -> None:
+        super().__init__(groups)
+        self._speed = speed
+        self.image = load_image(self.path_image)
+        self.rect = self.image.get_rect()
+        self.rect.x, self.y = pos
+
+    def update(self) -> None:
+        self.rect.x -= self._speed
+
+
+class Spike(GameObject, pg.sprite.Sprite):
+    path_image = 'menu/icons/x_button.png'
+
+    def __init__(self, groups: pg.sprite.Group, pos: tuple[int, int], speed: int) -> None:
+        super().__init__(groups)
+        self._speed = speed
+        self.image = load_image(self.path_image)
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = pos
+
+    def update(self) -> None:
+        self.rect.x -= self._speed
