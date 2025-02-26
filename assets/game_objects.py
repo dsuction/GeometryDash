@@ -1,3 +1,5 @@
+from tokenize import group
+
 import pygame as pg
 from utils.utils import  load_image
 from abc import ABC, abstractmethod
@@ -10,13 +12,15 @@ class GameObject(ABC):
 
 
 class Button(pg.sprite.Sprite, GameObject):
-    def __init__(self, group: pg.sprite.Group, path_image: str, size: tuple[int, int], size_window: tuple[int, int],  pos: tuple[int, int], signal: str) -> None:
+    def __init__(self, group: pg.sprite.Group, path_image: str, size: tuple[int, int], size_window: tuple[int, int],
+                 pos: tuple[int, int], signal: str) -> None:
         super().__init__(group)
         self._pos = pos
         self._size = size
         self._size_window = size_window
         self._signal = signal
         self._is_pressed = False
+        self._is_lock = False
         increase = 1.2
         self._image_1 = pg.transform.scale(load_image(path_image), size)
         self._image_2 = pg.transform.scale(load_image(path_image), (size[0] * increase, size[1] * increase))
@@ -24,8 +28,11 @@ class Button(pg.sprite.Sprite, GameObject):
         self.rect = self.image.get_rect()
         self.update()
 
+    def set_lock(self, is_lock: bool) -> None:
+        self._is_lock = is_lock
+
     def update(self) -> None:
-        if self.check_mouse_pos(self.rect):
+        if self.check_mouse_pos(self.rect) and not self._is_lock:
             self.image = self._image_2
         else:
             self.image = self._image_1
@@ -51,13 +58,15 @@ class Button(pg.sprite.Sprite, GameObject):
 
     @property
     def signal(self) -> str:
+        if self._is_lock:
+            return ''
         return self._signal
 
 
 class Background(pg.Surface, GameObject):
-    def __init__(self, windows_size, image) -> None:
+    def __init__(self, windows_size: tuple[int, int], path_image: str) -> None:
         super().__init__((windows_size[0], windows_size[1] - windows_size[1] // 3))
-        self.image = pg.transform.flip(pg.transform.scale(load_image(image), windows_size), True, True)
+        self.image = pg.transform.flip(pg.transform.scale(load_image(path_image), windows_size), True, True)
         self._x1 = 0
         self._x2 = self.image.get_width()
         self._y = 0
@@ -86,6 +95,7 @@ class Platform(pg.sprite.Sprite, GameObject):
         self.rect = self.image.get_rect()
         self.rect.x = self._side_size * Platform.count_platform
         self.rect.y = 0
+        self.mask = pg.mask.from_surface(self.image)
         Platform.count_platform += 1
 
     def update(self):
@@ -110,7 +120,8 @@ class Platforms(pg.Surface, GameObject):
         self._quantity = window_size[0] // (window_size[1] // 3) + 2
         self._platforms = []
         for i in range(self._quantity):
-            self._platforms.append(Platform('menu/icons/platform.png', window_size, 15, self._platforms_group))
+            self._platforms.append(Platform('menu/icons/platform.png', window_size, 15,
+                                            self._platforms_group))
 
     def update(self) -> None:
         self._platforms_group.update()
@@ -119,3 +130,42 @@ class Platforms(pg.Surface, GameObject):
     @property
     def platform_group(self) -> pg.sprite.Group:
         return self._platforms_group
+
+
+class Block(GameObject, pg.sprite.Sprite):
+    path_image = 'menu/icons/x_button.png'
+
+    def __init__(self, groups: pg.sprite.Group, pos: tuple[int, int], speed: int) -> None:
+        super().__init__(groups)
+        self._speed = speed
+        self.image: pg.Surface = load_image(self.path_image)
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = pos
+
+    def update(self) -> None:
+        self.rect.x -= self._speed
+
+
+class Spike(GameObject, pg.sprite.Sprite):
+    path_image = 'menu/icons/x_button.png'
+
+    def __init__(self, groups: pg.sprite.Group, pos: tuple[int, int], speed: int) -> None:
+        super().__init__(groups)
+        self._speed = speed
+        self.image: pg.Surface = load_image(self.path_image)
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = pos
+
+    def update(self) -> None:
+        self.rect.x -= self._speed
+
+
+class Wall(GameObject, pg.sprite.Sprite):
+    path_image = 'menu/icons/x_button.png'
+    
+    def __init__(self, *groups):
+        super().__init__(*groups)
+        self.image = load_image(self.path_image)
+
+    def update(self):
+        pass

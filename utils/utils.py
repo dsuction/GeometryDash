@@ -27,10 +27,16 @@ def load_image(path: str, color_key=None) -> pg.Surface:
 
 def load_music(path: str) -> None:
     fullname: str = check_file(path)
-    return pg.mixer.music.load(fullname)
+    pg.mixer.music.load(fullname)
 
 
-def paste_image(scene: pg.Surface, path_image: str, size_image: tuple[int, int], pos: tuple[int, int], color_key=None) -> None:
+def load_sound(path: str) -> pg.mixer.Sound:
+    fullname: str = check_file(path)
+    return pg.mixer.Sound(fullname)
+
+
+def paste_image(scene: pg.Surface, path_image: str, size_image: tuple[int, int], pos: tuple[int, int],
+                color_key=None) -> None:
     image: pg.Surface = pg.transform.scale(load_image(path_image, color_key=color_key), size_image)
     scene.blit(image, (pos[0] - size_image[0] // 2, pos[1] - size_image[1] // 2))
 
