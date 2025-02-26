@@ -95,6 +95,7 @@ class Platform(pg.sprite.Sprite, GameObject):
         self.rect = self.image.get_rect()
         self.rect.x = self._side_size * Platform.count_platform
         self.rect.y = 0
+        self.mask = pg.mask.from_surface(self.image)
         Platform.count_platform += 1
 
     def update(self):
@@ -131,16 +132,15 @@ class Platforms(pg.Surface, GameObject):
         return self._platforms_group
 
 
-
 class Block(GameObject, pg.sprite.Sprite):
-    path_image = 'menu/icons/youtube_button.png'
+    path_image = 'menu/icons/x_button.png'
 
     def __init__(self, groups: pg.sprite.Group, pos: tuple[int, int], speed: int) -> None:
         super().__init__(groups)
         self._speed = speed
-        self.image = load_image(self.path_image)
+        self.image: pg.Surface = load_image(self.path_image)
         self.rect = self.image.get_rect()
-        self.rect.x, self.y = pos
+        self.rect.x, self.rect.y = pos
 
     def update(self) -> None:
         self.rect.x -= self._speed
@@ -152,7 +152,7 @@ class Spike(GameObject, pg.sprite.Sprite):
     def __init__(self, groups: pg.sprite.Group, pos: tuple[int, int], speed: int) -> None:
         super().__init__(groups)
         self._speed = speed
-        self.image = load_image(self.path_image)
+        self.image: pg.Surface = load_image(self.path_image)
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
 

@@ -1,5 +1,5 @@
 {
   "name": "The_Impossible",
   "color_menu": [30, 30, 255],
-  "objects": [["color", [255, 0, 0], 0],["spike", [1000, 0]], ["block", [1000, 0]], ["color", [0, 0, 255], 1000]]
+  "objects": [["color", [255, 0, 0], 0], ["spike", [1500, 0]], ["block", [1000, 0]], ["color", [0, 0, 255], 1000]]
 }
