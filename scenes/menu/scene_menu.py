@@ -2,7 +2,7 @@ import sys
 import pygame as pg
 from utils.utils import load_music, paste_image
 from scenes.scene import Scene
-from assets.game_objects import Button, Background, Platforms, GameObject
+from assets.game_objects import Button, Background, Platforms, GameObject, ComingSoon
 
 
 class MenuScene(Scene):
@@ -29,7 +29,7 @@ class MenuScene(Scene):
 
         self._create_levels_button = Button(self._all_sprite, 'menu/icons/create_levels_button.png',
                                             (window_size[1] // 4, window_size[1] // 4), window_size,
-                                            (window_size[0] * 3 // 4, window_size[1] // 2 - 10), '')
+                                            (window_size[0] * 3 // 4, window_size[1] // 2 - 10), 'open_coming_soon')
 
         self._daily_button = Button(self._all_sprite, 'menu/icons/daily_button.png',
                                     (window_size[1] // 6, window_size[1] // 6), window_size,
@@ -79,13 +79,15 @@ class MenuScene(Scene):
                                    (window_size[1] // 10, window_size[1] // 10), window_size,
                                    (60, 60), 'open_exit_menu')
 
-        self._exit_cancel_button = Button(self._exit_sprites, 'menu/icons/exit_cancel_button.png',
+        self._exit_cancel_button = Button(self._exit_sprites, 'menu/icons/cancel_button.png',
                                           (int(window_size[0] / 5), int(window_size[1] / 7.5)), window_size,
-                                           (window_size[0] * 4 // 10 + 40, window_size[1] * 6 // 10 + 12), 'close_exit_menu')
+                                          (window_size[0] * 4 // 10 + 40, window_size[1] * 6 // 10 + 12),
+                                          'close_exit_menu')
 
         self._exit_yes_button = Button(self._exit_sprites, 'menu/icons/exit_yes_button.png',
                                        (int(window_size[0] / 7.5), int(window_size[1] / 7.5)), window_size,
-                                        (window_size[0] * 6 // 10 - 10, window_size[1] * 6 // 10 + 12), 'exit')
+                                       (window_size[0] * 6 // 10 - 10, window_size[1] * 6 // 10 + 12), 'exit')
+        self._coming_soon = ComingSoon(self._scene, window_size)
 
         load_music('menu\sounds\menuLoop.mp3')
         pg.mixer.music.play(-1)
@@ -128,6 +130,7 @@ class MenuScene(Scene):
             for button in self._exit_menu_buttons:
                 button.update()
             self._exit_sprites.draw(self._scene)
+        self._coming_soon.update()
 
     def _handle_event(self) -> None:
         self._event = ''
@@ -136,15 +139,21 @@ class MenuScene(Scene):
                 sys.exit()
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
-                    self._event = 'open_exit_menu'
+                    if not self._coming_soon.is_show:
+                        self._event = 'open_exit_menu'
             elif event.type == pg.MOUSEBUTTONDOWN:
                 lkm = 1
                 if event.button == lkm:
-                    buttons = self._buttons + self._exit_menu_buttons
+                    buttons = self._buttons + self._exit_menu_buttons + [self._coming_soon]
                     for button in buttons:
                         if button.is_pressed:
                             self._event = button.signal
-
+        if self._event == 'open_coming_soon':
+            self._coming_soon.set_show(is_show=True, buttons=self._buttons + self._exit_menu_buttons)
+            self._event = ''
+        if self._event == 'close_coming_soon':
+            self._coming_soon.set_show(is_show=False, buttons=self._buttons + self._exit_menu_buttons)
+            self._event = ''
         if self._event == 'open_exit_menu':
             self.set_show_exit_menu(True)
             self._event = ''
