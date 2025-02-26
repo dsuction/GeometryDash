@@ -25,7 +25,7 @@ class MenuScene(Scene):
 
         self._custom_player_button = Button(self._all_sprite, 'menu/icons/custom_player_button.png',
                                             (window_size[1] // 4, window_size[1] // 4), window_size,
-                                            (window_size[0] // 4, window_size[1] // 2 - 10), '')
+                                            (window_size[0] // 4, window_size[1] // 2 - 10), 'open_coming_soon')
 
         self._create_levels_button = Button(self._all_sprite, 'menu/icons/create_levels_button.png',
                                             (window_size[1] // 4, window_size[1] // 4), window_size,
@@ -33,47 +33,49 @@ class MenuScene(Scene):
 
         self._daily_button = Button(self._all_sprite, 'menu/icons/daily_button.png',
                                     (window_size[1] // 6, window_size[1] // 6), window_size,
-                                    (window_size[0] * 14 // 15, window_size[1] // 2 - 10), '')
+                                    (window_size[0] * 14 // 15, window_size[1] // 2 - 10), 'open_coming_soon')
 
         self._more_games_button = Button(self._all_sprite, 'menu/icons/more_games_button.png',
                                          (window_size[1] // 5 + 20, window_size[1] // 5), window_size,
-                                         (window_size[0] * 14 // 15, window_size[1] * 13 // 15), '')
+                                         (window_size[0] * 14 // 15, window_size[1] * 13 // 15), 'open_coming_soon')
 
         self._achievements_button = Button(self._all_sprite, 'menu/icons/achievements_button.png',
                                            (window_size[1] // 6, window_size[1] // 6), window_size,
-                                           (window_size[0] * 5 // 15 + 30, window_size[1] * 13 // 15), '')
+                                           (window_size[0] * 5 // 15 + 30, window_size[1] * 13 // 15),
+                                           'open_coming_soon')
 
         self._settings_button = Button(self._all_sprite, 'menu/icons/settings_button.png',
                                        (window_size[1] // 6, window_size[1] // 6), window_size,
-                                       (window_size[0] * 6.5 // 15 + 30, window_size[1] * 13 // 15), '')
+                                       (window_size[0] * 6.5 // 15 + 30, window_size[1] * 13 // 15), 'open_coming_soon')
 
         self._stats_button = Button(self._all_sprite, 'menu/icons/stats_button.png',
                                     (window_size[1] // 6, window_size[1] // 6), window_size,
-                                    (window_size[0] * 8 // 15 + 30, window_size[1] * 13 // 15), '')
+                                    (window_size[0] * 8 // 15 + 30, window_size[1] * 13 // 15), 'open_coming_soon')
 
         self._newgrounds_button = Button(self._all_sprite, 'menu/icons/newgrounds_button.png',
                                          (window_size[1] // 6, window_size[1] // 6), window_size,
-                                         (window_size[0] * 9.5 // 15 + 30, window_size[1] * 13 // 15), '')
+                                         (window_size[0] * 9.5 // 15 + 30, window_size[1] * 13 // 15),
+                                         'open_coming_soon')
 
         self._facebook_button = Button(self._all_sprite, 'menu/icons/facebook_button.png',
                                        (window_size[1] // 12, window_size[1] // 12), window_size,
-                                       (window_size[0] // 20, window_size[1] * 16 // 20), '')
+                                       (window_size[0] // 20, window_size[1] * 16 // 20), 'open_coming_soon')
 
         self._x_button = Button(self._all_sprite, 'menu/icons/x_button.png',
                                 (window_size[1] // 12, window_size[1] // 12), window_size,
-                                (window_size[0] * 2 // 20, window_size[1] * 16 // 20), '')
+                                (window_size[0] * 2 // 20, window_size[1] * 16 // 20), 'open_coming_soon')
 
         self._youtube_button = Button(self._all_sprite, 'menu/icons/youtube_button.png',
                                       (window_size[1] // 12, window_size[1] // 12), window_size,
-                                      (window_size[0] * 3 // 20, window_size[1] * 16 // 20), '')
+                                      (window_size[0] * 3 // 20, window_size[1] * 16 // 20), 'open_coming_soon')
 
         self._twitch_button = Button(self._all_sprite, 'menu/icons/twitch_button.png',
                                      (window_size[1] // 12, window_size[1] // 12), window_size,
-                                     (window_size[0] * 4 // 20, window_size[1] * 16 // 20), '')
+                                     (window_size[0] * 4 // 20, window_size[1] * 16 // 20), 'open_coming_soon')
 
         self._discord_button = Button(self._all_sprite, 'menu/icons/discord_button.png',
                                       (window_size[1] // 12, window_size[1] // 12), window_size,
-                                      (window_size[0] * 4 // 20, window_size[1] * 18 // 20), '')
+                                      (window_size[0] * 4 // 20, window_size[1] * 18 // 20), 'open_coming_soon')
 
         self._exit_button = Button(self._all_sprite, 'menu/icons/exit_button.png',
                                    (window_size[1] // 10, window_size[1] // 10), window_size,
