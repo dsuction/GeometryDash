@@ -158,3 +158,14 @@ class Spike(GameObject, pg.sprite.Sprite):
 
     def update(self) -> None:
         self.rect.x -= self._speed
+
+
+class Wall(GameObject, pg.sprite.Sprite):
+    path_image = 'menu/icons/x_button.png'
+    
+    def __init__(self, *groups):
+        super().__init__(*groups)
+        self.image = load_image(self.path_image)
+
+    def update(self):
+        pass

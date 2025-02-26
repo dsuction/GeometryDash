@@ -17,10 +17,11 @@ class LevelScene(Scene):
         self._blocks_group = pg.sprite.Group()
         self._background = Background(window_size, 'menu/icons/background.png')
         self._platforms = Platforms(window_size)
-        self._player = Player((100, 0), self._blocks_group, self._damage_objects_group, window_size, self._player_group)
+        self._player = Player((200, 500), self._blocks_group, self._damage_objects_group, window_size, self._player_group)
         self._level: dict = load_level(path_level)
         self._speed = 15
         self._x = 0
+        self._jump = False
         self.init_ui()
 
     def init_ui(self) -> None:
