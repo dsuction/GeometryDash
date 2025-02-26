@@ -17,7 +17,7 @@ class MenuScene(Scene):
         self._exit_menu_buttons: list[Button] = []
         self._background = Background(window_size, 'menu/icons/background.png')
         self._platforms = Platforms(window_size)
-        self._is_show_exit_menu: bool = False
+        self._is_show_exit_menu = False
 
         self._start_button = Button(self._all_sprite, 'menu/icons/start_button.png',
                                     (window_size[1] // 3 + 10, window_size[1] // 3), window_size,

@@ -1,6 +1,5 @@
 import sys
 import pygame as pg
-from pygame.display import update
 
 from scenes.scene import Scene
 from utils.utils import load_level, get_names_files_directory, paste_image
@@ -8,21 +7,31 @@ from assets.game_objects import Button
 
 
 class LevelMenu(pg.Surface):
-    def __init__(self, level, window_size):
+    def __init__(self, level: dict, window_size: tuple[int, int]):
         super().__init__(window_size)
         self._window_size = window_size
         self._level = level
+        self._name_level = self._level['name']
         self._buttons_group = pg.sprite.Group()
         self.fill(self._level['color_menu'])
         self._button = Button(self._buttons_group, 'menu/icons/daily_button.png', (300, 300),
-                              window_size, (600, 600), 'print')
+                              window_size, (600, 600), 'open_level')
+        self._event = ''
 
     def update(self):
+        if self._button.is_pressed:
+            self._event: str = self._button.signal + self._level['name']
+        self.fill(self._level['color_menu'])
+        self._buttons_group.update()
         self._buttons_group.draw(self)
+
+    @property
+    def event(self):
+        return self._event
 
 
 class LevelsMenuScene(Scene):
-    def __init__(self, window_size) -> None:
+    def __init__(self, window_size: tuple[int, int]) -> None:
         super().__init__(window_size)
         self._levels = {}
         self._button_group = pg.sprite.Group()
@@ -33,12 +42,17 @@ class LevelsMenuScene(Scene):
         self._delta_pos = 0
         self._speed_swap = 150
         self._direction = 0
-        self._back_to_menu_button = Button(self._button_group, 'levels_menu/icons/back_to_menu_button.png', (100, 100),
-                                           window_size, (60, 60), 'return_to_menu')
-        self._swipe_left_button = Button(self._button_group, 'levels_menu/icons/swap_left_button.png', (100, 100),
-                                         window_size, (80, window_size[1] // 2), 'swap_left')
-        self._swipe_right_button = Button(self._button_group, 'levels_menu/icons/swap_right_button.png', (100, 100),
-                                          window_size, (window_size[0] - 80, window_size[1] // 2), 'swap_right')
+
+        self._back_to_menu_button = Button(self._button_group, 'levels_menu/icons/back_to_menu_button.png',
+                                           (100, 100), window_size, (60, 60), 'return_to_menu')
+
+        self._swipe_left_button = Button(self._button_group, 'levels_menu/icons/swap_left_button.png',
+                                         (100, 200), window_size, (80, window_size[1] // 2),
+                                         'swap_left')
+
+        self._swipe_right_button = Button(self._button_group, 'levels_menu/icons/swap_right_button.png',
+                                          (100, 200), window_size, (window_size[0] - 80, window_size[1] // 2),
+                                          'swap_right')
         self.init_ui()
 
     def init_ui(self) -> None:
@@ -51,15 +65,22 @@ class LevelsMenuScene(Scene):
             self._levels_menu.append(LevelMenu(level, self._window_size))
 
     def update(self) -> None:
+        self._handle_event()
+        self._scene.fill('black')
         self.swap_level()
         for level in self._levels_menu:
             level.update()
         self._button_group.draw(self._scene)
         self._button_group.update()
-        paste_image(self._scene, 'levels_menu/icons/corner_l.png', (400, 400), (200, self._window_size[1] - 200))
-        paste_image(self._scene, 'levels_menu/icons/corner_r.png', (400, 400), (self._window_size[0] - 200, self._window_size[1] - 200))
-        paste_image(self._scene, 'levels_menu/icons/top_place.png', (1000, 130), (self._window_size[0] // 2, 65))
-        self._handle_event()
+
+        paste_image(self._scene, 'levels_menu/icons/corner_l.png', (400, 400),
+                    (200, self._window_size[1] - 200))
+
+        paste_image(self._scene, 'levels_menu/icons/corner_r.png', (400, 400),
+                    (self._window_size[0] - 200, self._window_size[1] - 200))
+
+        paste_image(self._scene, 'levels_menu/icons/top_place.png', (1000, 130),
+                    (self._window_size[0] // 2, 65))
 
 
     def swap_level(self) -> None:
@@ -93,6 +114,9 @@ class LevelsMenuScene(Scene):
                     for button in self._buttons:
                         if button.is_pressed:
                             self._event = button.signal
+                for level in self._levels_menu:
+                    if level.event:
+                        self._event = level.event
         self.check_swap_event()
 
     def check_swap_event(self) -> None:
