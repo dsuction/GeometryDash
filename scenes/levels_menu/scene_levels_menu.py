@@ -14,13 +14,13 @@ class LevelMenu(pg.Surface):
         self._name_level = self._level['name']
         self._buttons_group = pg.sprite.Group()
         self.fill(self._level['color_menu'])
-        self._button = Button(self._buttons_group, path_image, (600, 200),
+        self.button = Button(self._buttons_group, path_image, (900, 300),
                               window_size, (window_size[0] // 2, window_size[1] // 2), 'open_level')
         self._event = ''
 
     def update(self):
-        if self._button.is_pressed:
-            self._event: str = self._button.signal + self._level['name']
+        if self.button.is_pressed:
+            self._event: str = self.button.signal + self._level['name']
         self.fill(self._level['color_menu'])
         self._buttons_group.update()
         self._buttons_group.draw(self)
@@ -28,6 +28,7 @@ class LevelMenu(pg.Surface):
     @property
     def event(self):
         return self._event
+
 
 
 class LevelsMenuScene(Scene):

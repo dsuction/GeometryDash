@@ -29,9 +29,9 @@ class LevelScene(Scene):
     def init_ui(self) -> None:
         for obj in self._level['objects']:
             if obj[0] == 'spike':
-                Spike(self._damage_objects_group, (obj[1][0], -obj[1][1] + self._window_size[1] * 2 // 3 - 50), self._speed)
+                Spike(self._damage_objects_group, (obj[1][0], -obj[1][1] + self._window_size[1] * 2 // 3 - 100), self._speed)
             elif obj[0] == 'block':
-                Block(self._blocks_group, (obj[1][0], -obj[1][1] + self._window_size[1] * 2 // 3 - 50), self._speed)
+                Block(self._blocks_group, (obj[1][0], -obj[1][1] + self._window_size[1] * 2 // 3 - 100), self._speed)
             elif obj[0] == 'end':
                 self._end_x = obj[1]
 
@@ -58,7 +58,7 @@ class LevelScene(Scene):
         self._x += self._speed
         if self._x >= self._end_x:
             self._lock = True
-            paste_image(self._scene, 'levels/icons/level_complede.png', (500, 500), (0, 0))
+            paste_image(self._scene, 'levels/icons/level_complede.png', (1135, 135), (self._window_size[0] // 2, 100))
 
         for obj in self._level['objects']:
             if obj[0] == 'color':

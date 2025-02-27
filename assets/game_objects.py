@@ -177,12 +177,12 @@ class ComingSoon(Button):
 
 
 class Block(GameObject, pg.sprite.Sprite):
-    path_image = 'menu/icons/x_button.png'
+    path_image = 'levels/icons/block.png'
 
     def __init__(self, groups: pg.sprite.Group, pos: tuple[int, int], speed: int) -> None:
         super().__init__(groups)
         self._speed = speed
-        self.image: pg.Surface = load_image(self.path_image)
+        self.image: pg.Surface = pg.transform.scale(load_image(self.path_image), (100, 100))
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
 
@@ -191,25 +191,14 @@ class Block(GameObject, pg.sprite.Sprite):
 
 
 class Spike(GameObject, pg.sprite.Sprite):
-    path_image = 'menu/icons/x_button.png'
+    path_image = 'levels/icons/spike.png'
 
     def __init__(self, groups: pg.sprite.Group, pos: tuple[int, int], speed: int) -> None:
         super().__init__(groups)
         self._speed = speed
-        self.image: pg.Surface = load_image(self.path_image)
+        self.image: pg.Surface = pg.transform.scale(load_image(self.path_image), (100, 100))
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
 
     def update(self) -> None:
         self.rect.x -= self._speed
-
-
-class Wall(GameObject, pg.sprite.Sprite):
-    path_image = 'menu/icons/x_button.png'
-
-    def __init__(self, *groups):
-        super().__init__(*groups)
-        self.image = load_image(self.path_image)
-
-    def update(self):
-        pass
