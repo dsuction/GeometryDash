@@ -160,7 +160,7 @@ class ComingSoon(Button):
                         (self._window_size[0] // 2, self._window_size[1] // 2), color_key=(0, 0, 0))
             self._group.draw(self._screen)
 
-    def set_show(self, is_show: bool, buttons: list[Button] = []):
+    def set_show(self, is_show: bool, buttons: list[Button]) -> None:
         self.is_show = is_show
         self.set_lock(is_lock=not is_show)
         for button in buttons:

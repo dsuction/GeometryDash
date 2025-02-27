@@ -25,7 +25,7 @@ class MenuScene(Scene):
 
         self._custom_player_button = Button(self._all_sprite, 'menu/icons/custom_player_button.png',
                                             (window_size[1] // 4, window_size[1] // 4), window_size,
-                                            (window_size[0] // 4, window_size[1] // 2 - 10), 'open_coming_soon')
+                                            (window_size[0] // 4, window_size[1] // 2 - 10), 'open_skin_selection')
 
         self._create_levels_button = Button(self._all_sprite, 'menu/icons/create_levels_button.png',
                                             (window_size[1] // 4, window_size[1] // 4), window_size,
