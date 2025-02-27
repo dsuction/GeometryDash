@@ -2,7 +2,7 @@ import sys
 import pygame as pg
 
 from scenes.scene import Scene
-from utils.utils import load_json
+from utils.utils import load_json, paste_image, load_image
 from assets.game_objects import Spike, Block, Background, Platforms
 from player import Player
 
@@ -21,7 +21,6 @@ class LevelScene(Scene):
         self._level: dict = load_json('levels/' + self._path_level)
         self._speed = 15
         self._x = 0
-        self._winner_image: pg.Surface = None
         self._jump = False
         self._lock = False
         self._end_x = 0
@@ -59,6 +58,7 @@ class LevelScene(Scene):
         self._x += self._speed
         if self._x >= self._end_x:
             self._lock = True
+            paste_image(self._scene, 'levels/icons/level_complede.png', (500, 500), (0, 0))
 
         for obj in self._level['objects']:
             if obj[0] == 'color':
