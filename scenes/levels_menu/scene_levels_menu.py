@@ -2,7 +2,7 @@ import sys
 import pygame as pg
 
 from scenes.scene import Scene
-from utils.utils import load_level, get_names_files_directory, paste_image
+from utils.utils import load_json, get_names_files_directory, paste_image
 from assets.game_objects import Button
 
 
@@ -59,7 +59,7 @@ class LevelsMenuScene(Scene):
         for button in [self._back_to_menu_button, self._swipe_left_button, self._swipe_right_button]:
             self._buttons.append(button)
         for file in get_names_files_directory('levels'):
-            color = load_level('levels/' + file)['color_menu']
+            color = load_json('levels/' + file)['color_menu']
             self._levels[file] = {'name': file, 'color_menu': color}
         for level in self._levels.values():
             self._levels_menu.append(LevelMenu(level, self._window_size))

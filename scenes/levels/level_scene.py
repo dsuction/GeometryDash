@@ -2,7 +2,7 @@ import sys
 import pygame as pg
 
 from scenes.scene import Scene
-from utils.utils import load_level
+from utils.utils import load_json
 from assets.game_objects import Spike, Block, Background, Platforms
 from player import Player
 
@@ -18,7 +18,7 @@ class LevelScene(Scene):
         self._background = Background(window_size, 'menu/icons/background.png')
         self._platforms = Platforms(window_size)
         self._player = Player((200, 500), self._blocks_group, self._damage_objects_group, window_size, self._player_group)
-        self._level: dict = load_level(path_level)
+        self._level: dict = load_json(path_level)
         self._speed = 15
         self._x = 0
         self._jump = False
