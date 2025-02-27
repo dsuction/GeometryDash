@@ -2,25 +2,25 @@ import sys
 import pygame as pg
 
 from scenes.scene import Scene
-from utils.utils import load_level, get_names_files_directory, paste_image
+from utils.utils import load_json, get_names_files_directory, paste_image
 from assets.game_objects import Button
 
 
 class LevelMenu(pg.Surface):
-    def __init__(self, level: dict, window_size: tuple[int, int]):
+    def __init__(self, level: dict, window_size: tuple[int, int], path_image: str):
         super().__init__(window_size)
         self._window_size = window_size
         self._level = level
         self._name_level = self._level['name']
         self._buttons_group = pg.sprite.Group()
         self.fill(self._level['color_menu'])
-        self._button = Button(self._buttons_group, 'menu/icons/daily_button.png', (300, 300),
-                              window_size, (600, 600), 'open_level')
+        self.button = Button(self._buttons_group, path_image, (900, 300),
+                              window_size, (window_size[0] // 2, window_size[1] // 2), 'open_level')
         self._event = ''
 
     def update(self):
-        if self._button.is_pressed:
-            self._event: str = self._button.signal + self._level['name']
+        if self.button.is_pressed:
+            self._event: str = self.button.signal + self._level['name']
         self.fill(self._level['color_menu'])
         self._buttons_group.update()
         self._buttons_group.draw(self)
@@ -28,6 +28,7 @@ class LevelMenu(pg.Surface):
     @property
     def event(self):
         return self._event
+
 
 
 class LevelsMenuScene(Scene):
@@ -53,16 +54,22 @@ class LevelsMenuScene(Scene):
         self._swipe_right_button = Button(self._button_group, 'levels_menu/icons/swap_right_button.png',
                                           (100, 200), window_size, (window_size[0] - 80, window_size[1] // 2),
                                           'swap_right')
+        self._paths = {}
         self.init_ui()
 
     def init_ui(self) -> None:
         for button in [self._back_to_menu_button, self._swipe_left_button, self._swipe_right_button]:
             self._buttons.append(button)
         for file in get_names_files_directory('levels'):
-            color = load_level('levels/' + file)['color_menu']
+            data = load_json('levels/' + file)
+            color = data['color_menu']
+            path_image = data['path_image']
+            self._paths[file] = path_image
             self._levels[file] = {'name': file, 'color_menu': color}
-        for level in self._levels.values():
-            self._levels_menu.append(LevelMenu(level, self._window_size))
+        for file in self._levels.keys():
+            level = self._levels[file]
+            path_image = self._paths[file]
+            self._levels_menu.append(LevelMenu(level, self._window_size, path_image))
 
     def update(self) -> None:
         self._handle_event()
@@ -81,7 +88,6 @@ class LevelsMenuScene(Scene):
 
         paste_image(self._scene, 'levels_menu/icons/top_place.png', (1000, 130),
                     (self._window_size[0] // 2, 65))
-
 
     def swap_level(self) -> None:
         for i, level in enumerate(self._levels_menu):

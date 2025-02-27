@@ -1,7 +1,6 @@
-from tokenize import group
-
 import pygame as pg
-from utils.utils import  load_image
+
+from utils.utils import load_image, paste_image
 from abc import ABC, abstractmethod
 
 
@@ -49,6 +48,8 @@ class Button(pg.sprite.Sprite, GameObject):
 
     @property
     def is_pressed(self) -> bool:
+        if self._is_lock:
+            return False
         mouse_pressed = pg.mouse.get_pressed()
         if self.check_mouse_pos(self.rect) and mouse_pressed[0]:
             self._is_pressed = True
@@ -71,22 +72,28 @@ class Background(pg.Surface, GameObject):
         self._x2 = self.image.get_width()
         self._y = 0
         self._speed = 2
+        self._lock = False
         transparency = 100
         self.set_alpha(transparency)
 
     def update(self) -> None:
-        self._x1 -= self._speed
-        self._x2 -= self._speed
-        if self._x1 <= -self.image.get_width():
-            self._x1 = self._x2
-            self._x2 = self.image.get_width()
+        if not self._lock:
+            self._x1 -= self._speed
+            self._x2 -= self._speed
+            if self._x1 <= -self.image.get_width():
+                self._x1 = self._x2
+                self._x2 = self.image.get_width()
         self.blit(self.image, (self._x1, self._y))
         self.blit(self.image, (self._x2, self._y))
+
+    def set_lock(self, lock: bool) -> None:
+        self._lock = lock
 
 
 class Platform(pg.sprite.Sprite, GameObject):
     count_platform = 0
-    def __init__(self, image_path: str, window_size: tuple[int, int], speed: int,  *group):
+
+    def __init__(self, image_path: str, window_size: tuple[int, int], speed: int, *group):
         super().__init__(*group)
         self._speed = speed
         self._side_size = window_size[1] // 3
@@ -110,9 +117,10 @@ class Platform(pg.sprite.Sprite, GameObject):
 
 class Platforms(pg.Surface, GameObject):
     def __init__(self, window_size: tuple[int, int]):
-        self._size  = (window_size[0], window_size[1] // 3)
+        self._size = (window_size[0], window_size[1] // 3)
         super().__init__(self._size)
         Platform.count_platform = 0
+        self._lock = False
         self.set_colorkey('black')
         transparency = 110
         self.set_alpha(transparency)
@@ -124,21 +132,57 @@ class Platforms(pg.Surface, GameObject):
                                             self._platforms_group))
 
     def update(self) -> None:
-        self._platforms_group.update()
+        if not self._lock:
+            self._platforms_group.update()
         self._platforms_group.draw(self)
 
     @property
     def platform_group(self) -> pg.sprite.Group:
         return self._platforms_group
 
+    def set_lock(self, lock: bool) -> None:
+        self._lock = lock
+
+
+class ComingSoon(Button):
+    def __init__(self, screen: pg.Surface, window_size: tuple[int, int]):
+        self.is_show = False
+        self._screen = screen
+        self._group = pg.sprite.Group()
+        self._window_size = window_size
+        self._path_button = 'menu/icons/cancel_button.png'
+        self._path_background = 'menu/icons/coming_soon_background.png'
+        pos = (round(window_size[0] / 2), round(window_size[1] / 1.8))
+        size = (300, 150)
+        super().__init__(self._group, self._path_button, size, self._window_size, pos,
+                         'close_coming_soon')
+        self.set_lock(is_lock=not self.is_show)
+
+    def update(self) -> None:
+        if self.is_show:
+            transparency = pg.Surface(self._window_size)
+            transparency.set_alpha(180)
+            self._screen.blit(transparency, (0, 0))
+            super().update()
+            paste_image(self._screen, self._path_background,
+                        (round(self._window_size[0] // 2.5), round(self._window_size[1] // 2.5)),
+                        (self._window_size[0] // 2, self._window_size[1] // 2), color_key=(0, 0, 0))
+            self._group.draw(self._screen)
+
+    def set_show(self, is_show: bool, buttons: list[Button]) -> None:
+        self.is_show = is_show
+        self.set_lock(is_lock=not is_show)
+        for button in buttons:
+            button.set_lock(is_lock=is_show)
+
 
 class Block(GameObject, pg.sprite.Sprite):
-    path_image = 'menu/icons/x_button.png'
+    path_image = 'levels/icons/block.png'
 
     def __init__(self, groups: pg.sprite.Group, pos: tuple[int, int], speed: int) -> None:
         super().__init__(groups)
         self._speed = speed
-        self.image: pg.Surface = load_image(self.path_image)
+        self.image: pg.Surface = pg.transform.scale(load_image(self.path_image), (100, 100))
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
 
@@ -147,25 +191,14 @@ class Block(GameObject, pg.sprite.Sprite):
 
 
 class Spike(GameObject, pg.sprite.Sprite):
-    path_image = 'menu/icons/x_button.png'
+    path_image = 'levels/icons/spike.png'
 
     def __init__(self, groups: pg.sprite.Group, pos: tuple[int, int], speed: int) -> None:
         super().__init__(groups)
         self._speed = speed
-        self.image: pg.Surface = load_image(self.path_image)
+        self.image: pg.Surface = pg.transform.scale(load_image(self.path_image), (100, 100))
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
 
     def update(self) -> None:
         self.rect.x -= self._speed
-
-
-class Wall(GameObject, pg.sprite.Sprite):
-    path_image = 'menu/icons/x_button.png'
-    
-    def __init__(self, *groups):
-        super().__init__(*groups)
-        self.image = load_image(self.path_image)
-
-    def update(self):
-        pass

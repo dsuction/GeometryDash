@@ -7,7 +7,7 @@ import json
 def check_file(path: str) -> str:
     fullname = os.path.join('assets', path)
     if not os.path.isfile(fullname):
-        print(fullname)
+        print(f'Error: file not found \'{fullname}\'')
         sys.exit()
     return fullname
 
@@ -41,11 +41,17 @@ def paste_image(scene: pg.Surface, path_image: str, size_image: tuple[int, int],
     scene.blit(image, (pos[0] - size_image[0] // 2, pos[1] - size_image[1] // 2))
 
 
-def load_level(path: str) -> dict:
+def load_json(path: str) -> dict:
     fullname: str = check_file(path)
     with open(fullname, 'r') as f:
         level = json.load(f)
     return level
+
+
+def save_json(path: str, data: dict):
+    fullname: str = check_file(path)
+    with open(fullname, 'w') as f:
+        json.dump(data, f)
 
 
 def get_names_files_directory(path: str) -> list[str]:
@@ -53,4 +59,5 @@ def get_names_files_directory(path: str) -> list[str]:
     if not os.path.isdir(fullname):
         sys.exit()
     files = os.listdir(fullname)
+    files = [i for i in files if 'icons' not in i]
     return files
