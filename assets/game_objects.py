@@ -1,6 +1,5 @@
-from tokenize import group
-
 import pygame as pg
+
 from utils.utils import load_image, paste_image
 from abc import ABC, abstractmethod
 
@@ -73,17 +72,22 @@ class Background(pg.Surface, GameObject):
         self._x2 = self.image.get_width()
         self._y = 0
         self._speed = 2
+        self._lock = False
         transparency = 100
         self.set_alpha(transparency)
 
     def update(self) -> None:
-        self._x1 -= self._speed
-        self._x2 -= self._speed
-        if self._x1 <= -self.image.get_width():
-            self._x1 = self._x2
-            self._x2 = self.image.get_width()
+        if not self._lock:
+            self._x1 -= self._speed
+            self._x2 -= self._speed
+            if self._x1 <= -self.image.get_width():
+                self._x1 = self._x2
+                self._x2 = self.image.get_width()
         self.blit(self.image, (self._x1, self._y))
         self.blit(self.image, (self._x2, self._y))
+
+    def set_lock(self, lock: bool) -> None:
+        self._lock = lock
 
 
 class Platform(pg.sprite.Sprite, GameObject):
@@ -116,6 +120,7 @@ class Platforms(pg.Surface, GameObject):
         self._size = (window_size[0], window_size[1] // 3)
         super().__init__(self._size)
         Platform.count_platform = 0
+        self._lock = False
         self.set_colorkey('black')
         transparency = 110
         self.set_alpha(transparency)
@@ -127,12 +132,16 @@ class Platforms(pg.Surface, GameObject):
                                             self._platforms_group))
 
     def update(self) -> None:
-        self._platforms_group.update()
+        if not self._lock:
+            self._platforms_group.update()
         self._platforms_group.draw(self)
 
     @property
     def platform_group(self) -> pg.sprite.Group:
         return self._platforms_group
+
+    def set_lock(self, lock: bool) -> None:
+        self._lock = lock
 
 
 class ComingSoon(Button):
