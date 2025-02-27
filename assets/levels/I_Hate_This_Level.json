@@ -1,5 +1,6 @@
 {
     "name": "I Hate This Level",
+    "path_image": "levels_menu/icons/button_level.png",
     "color_menu": [255, 30, 30],
     "objects": [["color", [255, 0, 0], [0, 0]],["spike", [100, 0]], ["block", [200, 0]]]
 }

@@ -59,4 +59,5 @@ def get_names_files_directory(path: str) -> list[str]:
     if not os.path.isdir(fullname):
         sys.exit()
     files = os.listdir(fullname)
+    files = [i for i in files if 'icons' not in i]
     return files
