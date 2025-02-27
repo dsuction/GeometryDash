@@ -1,5 +1,6 @@
 {
   "name": "The_Impossible",
+  "path_image": "levels_menu/icons/button_level.png",
   "color_menu": [30, 30, 255],
   "objects": [["color", [255, 0, 0], 0], ["spike", [3000, 0]], ["block", [2000, 0]], ["block", [2050, 0]], ["block", [2100, 0]], ["block", [2150, 0]],["color", [0, 0, 255], 1000], ["end", 10000]]
 }
